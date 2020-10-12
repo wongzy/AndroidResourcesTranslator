@@ -1,3 +1,12 @@
 {
-
+  "source_language" : "en",
+  "source_path": ".../...",
+  "files_names" : [
+    "string.xml",
+    "main_trans.xml"
+  ],
+  "translate_languages": [
+    "zh-cn",
+    "ja"
+  ]
 }

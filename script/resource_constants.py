@@ -1,6 +1,7 @@
-COMMON_PREFIX = 'values-'
+COMMON_PREFIX = '/values'
 
 RESOURCE_SPECIAL_MAP = {
-    'zh-cn': 'zh-rCN',
-    'zh-tw': 'zh-rTW',
+    'en': '',
+    'zh-cn': '-zh-rCN',
+    'zh-tw': '-zh-rTW',
 }

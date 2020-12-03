@@ -1,15 +1,15 @@
 import json
-import xml.sax
 import os
+import xml.etree.cElementTree as ET
 
 from googletrans import Translator
-from script.resource_constants import RESOURCE_SPECIAL_MAP, COMMON_PREFIX
+from script.resource_constants import RESOURCE_SPECIAL_MAP, COMMON_PREFIX, STRING_TAG, DEFAULT_LANGUAGE
 
 RESOURCE_PATH = ""
 RESOURCE_LANGUAGE = ""
 FILE_LIST = ""
 TRANSLATE_TYPE = 1
-LANGUAGE_LIST = ""
+LANGUAGE_LIST = []
 
 
 # read json config
@@ -56,11 +56,19 @@ def read_resource_string():
 
 # read strings from file
 def get_file_strings(_file_full_name):
-    return ""
+    _tree_root = ET.parse(_file_full_name).getroot()
+    # for item in _tree_root.iter():
+    #     if item.tag == STRING_TAG:
+    #         print(item.text)
+    return _tree_root
 
 
 # main
 read_config()
+# add default language to LANGUAGE_LIST
+if not RESOURCE_LANGUAGE == DEFAULT_LANGUAGE:
+    if not LANGUAGE_LIST.__contains__(DEFAULT_LANGUAGE):
+        LANGUAGE_LIST.append(DEFAULT_LANGUAGE)
 file_resources_map = read_resource_string()
 if len(file_resources_map) == 0:
     exit("There is no string resource, please check translate_config.json to ensure its validity")

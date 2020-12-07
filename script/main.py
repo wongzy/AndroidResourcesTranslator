@@ -63,6 +63,28 @@ def get_file_strings(_file_full_name):
     return _tree_root
 
 
+# write string to file
+def translate_to_other_file(_resource_map, _language):
+    _folder_name = get_folder_name(_language)
+    create_folder_if_absent(_folder_name)
+    for key in _resource_map:
+        _file_full_name = _folder_name + '/' + key
+        create_file_if_absent(_file_full_name)
+
+
+# create folder
+def create_folder_if_absent(_folder_name):
+    if not os.path.exists(_folder_name):
+        os.makedirs(_folder_name)
+
+
+# create file
+def create_file_if_absent(_full_file_name):
+    if not os.path.isfile(_full_file_name):
+        fd = open(_full_file_name, mode="w", encoding="utf-8")
+        fd.close()
+
+
 # main
 read_config()
 # add default language to LANGUAGE_LIST
@@ -72,3 +94,5 @@ if not RESOURCE_LANGUAGE == DEFAULT_LANGUAGE:
 file_resources_map = read_resource_string()
 if len(file_resources_map) == 0:
     exit("There is no string resource, please check translate_config.json to ensure its validity")
+for language in LANGUAGE_LIST:
+    translate_to_other_file(file_resources_map, language)

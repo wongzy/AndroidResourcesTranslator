@@ -56,11 +56,11 @@ def read_resource_string():
 
 # read strings from file
 def get_file_strings(_file_full_name):
-    _tree_root = ET.parse(_file_full_name).getroot()
+    _tree = ET.parse(_file_full_name)
     # for item in _tree_root.iter():
     #     if item.tag == STRING_TAG:
     #         print(item.text)
-    return _tree_root
+    return _tree
 
 
 # write string to file

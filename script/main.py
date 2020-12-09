@@ -1,6 +1,7 @@
 import json
 import os
 import xml.etree.cElementTree as ET
+import copy
 
 from googletrans import Translator
 from script.resource_constants import RESOURCE_SPECIAL_MAP, COMMON_PREFIX, STRING_TAG, DEFAULT_LANGUAGE
@@ -10,6 +11,7 @@ RESOURCE_LANGUAGE = ""
 FILE_LIST = ""
 TRANSLATE_TYPE = 1
 LANGUAGE_LIST = []
+TRANSLATOR = Translator()
 
 
 # read json config
@@ -21,6 +23,7 @@ def read_config():
     global FILE_LIST
     global TRANSLATE_TYPE
     global LANGUAGE_LIST
+    global TRANSLATOR
     RESOURCE_LANGUAGE = json_config["source_language"]
     RESOURCE_PATH = json_config["source_path"]
     FILE_LIST = json_config["files_names"]
@@ -70,6 +73,12 @@ def translate_to_other_file(_resource_map, _language):
     for key in _resource_map:
         _file_full_name = _folder_name + '/' + key
         create_file_if_absent(_file_full_name)
+        _new_tree = copy.deepcopy(_resource_map[key])
+        _new_tree_root = _new_tree.getroot()
+        for item in _new_tree_root.iter():
+            if item.tag == STRING_TAG:
+                text = TRANSLATOR.translate("test", dest="ja")
+                print("translated text = " + text)
 
 
 # create folder

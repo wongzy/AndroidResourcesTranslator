@@ -77,8 +77,8 @@ def translate_to_other_file(_resource_map, _language):
         _new_tree_root = _new_tree.getroot()
         for item in _new_tree_root.iter():
             if item.tag == STRING_TAG:
-                text = TRANSLATOR.translate("test", dest="ja")
-                print("translated text = " + text)
+                text = TRANSLATOR.translate(item.text, src=RESOURCE_LANGUAGE, dest=_language)
+                print("target language =" + _language + ", translated text = " + text.text)
 
 
 # create folder

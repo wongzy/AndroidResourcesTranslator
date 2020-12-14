@@ -77,7 +77,8 @@ def translate_to_other_file(_resource_map, _language):
         for item in _new_tree_root.iter():
             if item.tag == STRING_TAG:
                 res = TRANSLATOR.translate(item.text, src=RESOURCE_LANGUAGE, dest=_language)
-                item.text = res.text
+                str_translated = res.text.__str__().replace("'", "\\'")
+                item.text = str_translated
         _new_tree.write(_file_full_name, encoding='utf-8', xml_declaration=True)
 
 

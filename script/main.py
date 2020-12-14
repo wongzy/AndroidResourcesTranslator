@@ -6,12 +6,12 @@ import copy
 from googletrans import Translator
 from script.resource_constants import RESOURCE_SPECIAL_MAP, COMMON_PREFIX, STRING_TAG, DEFAULT_LANGUAGE
 
-RESOURCE_PATH = ""
-RESOURCE_LANGUAGE = ""
-FILE_LIST = ""
-TRANSLATE_TYPE = 1
-LANGUAGE_LIST = []
+RESOURCE_PATH = ''
+RESOURCE_LANGUAGE = ''
+FILE_SET = set()
+LANGUAGE_SET = set()
 TRANSLATOR = Translator()
+COUNT = 1
 
 
 # read json config
@@ -20,15 +20,14 @@ def read_config():
         json_config = json.load(json_file)
     global RESOURCE_PATH
     global RESOURCE_LANGUAGE
-    global FILE_LIST
-    global TRANSLATE_TYPE
-    global LANGUAGE_LIST
+    global FILE_SET
+    global LANGUAGE_SET
     global TRANSLATOR
-    RESOURCE_LANGUAGE = json_config["source_language"]
-    RESOURCE_PATH = json_config["source_path"]
-    FILE_LIST = json_config["files_names"]
-    TRANSLATE_TYPE = json_config["translate_type"]
-    LANGUAGE_LIST = json_config["translate_languages"]
+    global COUNT
+    RESOURCE_LANGUAGE = json_config['source_language']
+    RESOURCE_PATH = json_config['source_path']
+    FILE_SET = set(json_config['files_names'])
+    LANGUAGE_SET = set(json_config['translate_languages'])
 
 
 # get folder's name by language
@@ -37,7 +36,7 @@ def get_folder_name(_language):
     if RESOURCE_SPECIAL_MAP.__contains__(_language):
         _folder_name += RESOURCE_SPECIAL_MAP.get(_language)
     else:
-        _folder_name += "-" + _language
+        _folder_name += '-' + _language
     return _folder_name
 
 
@@ -46,14 +45,14 @@ def read_resource_string():
     _map = {}
     _folder_name = get_folder_name(RESOURCE_LANGUAGE)
     if os.path.exists(_folder_name):
-        for file_name in FILE_LIST:
+        for file_name in FILE_SET:
             _file_full_name = _folder_name + '/' + file_name
             if not os.path.exists(_file_full_name):
-                exit("file " + file_name + " not exists, please check translate_config.json to ensure its validity")
+                exit('file ' + file_name + ' not exists, please check translate_config.json to ensure its validity')
             else:
                 _map[file_name] = get_file_strings(_file_full_name)
     else:
-        exit("Folder " + _folder_name + " is not exist，please check translate_config.json to ensure its validity")
+        exit('Folder ' + _folder_name + ' is not exist，please check translate_config.json to ensure its validity')
     return _map
 
 
@@ -77,8 +76,9 @@ def translate_to_other_file(_resource_map, _language):
         _new_tree_root = _new_tree.getroot()
         for item in _new_tree_root.iter():
             if item.tag == STRING_TAG:
-                text = TRANSLATOR.translate(item.text, src=RESOURCE_LANGUAGE, dest=_language)
-                print("target language =" + _language + ", translated text = " + text.text)
+                res = TRANSLATOR.translate(item.text, src=RESOURCE_LANGUAGE, dest=_language)
+                item.text = res.text
+        _new_tree.write(_file_full_name, encoding='utf-8', xml_declaration=True)
 
 
 # create folder
@@ -90,18 +90,24 @@ def create_folder_if_absent(_folder_name):
 # create file
 def create_file_if_absent(_full_file_name):
     if not os.path.isfile(_full_file_name):
-        fd = open(_full_file_name, mode="w", encoding="utf-8")
+        fd = open(_full_file_name, mode='w', encoding='utf-8')
         fd.close()
+    else:
+        with open(_full_file_name, 'r+', encoding='utf-8') as file:
+            file.seek(0)
+            file.truncate()
 
 
 # main
 read_config()
 # add default language to LANGUAGE_LIST
 if not RESOURCE_LANGUAGE == DEFAULT_LANGUAGE:
-    if not LANGUAGE_LIST.__contains__(DEFAULT_LANGUAGE):
-        LANGUAGE_LIST.append(DEFAULT_LANGUAGE)
+    if not LANGUAGE_SET.__contains__(DEFAULT_LANGUAGE):
+        LANGUAGE_SET.add(DEFAULT_LANGUAGE)
 file_resources_map = read_resource_string()
 if len(file_resources_map) == 0:
-    exit("There is no string resource, please check translate_config.json to ensure its validity")
-for language in LANGUAGE_LIST:
+    exit('There is no string resource, please check translate_config.json to ensure its validity')
+for language in LANGUAGE_SET:
     translate_to_other_file(file_resources_map, language)
+    print(language + ' finished. count = ' + COUNT.__str__())
+    COUNT = COUNT + 1

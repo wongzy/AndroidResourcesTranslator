@@ -1,5 +1,6 @@
 # AndroidResourcesTranslator
 A python script to translate android language resources.
+[Chinese doc](https://github.com/wongzy/AndroidResourcesTranslator/blob/main/README_CN.md)
 
 # Start
 1. install googletrans

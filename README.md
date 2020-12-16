@@ -1,6 +1,48 @@
 # AndroidResourcesTranslator
 A python script to translate android language resources.
 
+# Start
+1. install googletrans
+```pip
+pip install googletrans==4.0.0-rc1 --upgrade-strategy only-if-needed
+```
+
+> Googletrans is currently having some issues and needs to install version 4.0.0-rc1 to avoid this problem，[py-googletrans](https://github.com/ssut/py-googletrans)
+
+2. Edit **translate_config.json**:
+
+```json
+{
+  "source_language": "zh-cn",
+  "source_path": "/Users/wongzhenyu/Projects/Fukotw/app/src/main/res",
+  "files_names": [
+    "strings.xml"
+  ],
+  "translate_languages": [
+    "zh-tw",
+    "hi",
+    "en",
+    "es",
+    "ar",
+    "bn",
+    "fr",
+    "pt",
+    "ms",
+    "ru",
+    "ja",
+    "pa",
+    "te"
+  ]
+}
+```
+
+source_language: Languages that need to be translated
+source_path: The directory where the resource files are located
+files_names: List of files to be translated
+translate_languages：Languages in need of translation
+
+3. Run main.py
+
 # supported language
 
 All supported languages with codes:

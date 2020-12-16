@@ -2,6 +2,49 @@
 
 一个用来翻译Android资源的python脚本
 
+# 使用方法：
+1. 安装googletrans
+```pip
+pip install googletrans==4.0.0-rc1 --upgrade-strategy only-if-needed
+```
+
+> googletrans 目前有些问题，需要安装4.0.0-rc1版本问题才不会出现，可见[py-googletrans](https://github.com/ssut/py-googletrans)
+
+2. 编辑**translate_config.json**:
+
+```json
+{
+  "source_language": "zh-cn",
+  "source_path": "/Users/wongzhenyu/Projects/Fukotw/app/src/main/res",
+  "files_names": [
+    "strings.xml"
+  ],
+  "translate_languages": [
+    "zh-tw",
+    "hi",
+    "en",
+    "es",
+    "ar",
+    "bn",
+    "fr",
+    "pt",
+    "ms",
+    "ru",
+    "ja",
+    "pa",
+    "te"
+  ]
+}
+```
+
+source_language: 需要被翻译的语言
+source_path: 资源文件所在目录
+files_names: 需要翻译的文件列表
+translate_languages：需要翻译的语言
+
+3. 运行main.py
+
+
 # supported language
 
 所有支持的语言及他们的代码：
